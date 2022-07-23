@@ -3,4 +3,23 @@ const addPizzaToCart = (pizzaObj) => ({
   payload: pizzaObj,
 });
 
-export { addPizzaToCart };
+const clearCart = () => ({
+  type: "CLEAR_CART",
+});
+
+const removeCartItem = (id) => ({
+  type: "REMOVE_CART_ITEM",
+  payload: id
+});
+
+const plusItem = (id) => ({
+  type: "PLUS_ITEM",
+  payload: id
+});
+
+const minusItem = (id) => ({
+  type: "MINUS_ITEM",
+  payload: id
+});
+
+export { addPizzaToCart, clearCart, removeCartItem, plusItem, minusItem };
