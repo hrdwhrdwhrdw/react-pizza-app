@@ -6,15 +6,16 @@ export const setLoaded = (payload) => ({
 });
 
 const fetchPizzas = (category, sortBy) => (dispatch) => {
-  dispatch(setLoaded(false));
+  dispatch(setLoaded(true));
   axios
     .get(
-      `/pizzas?${
-        category !== null ? `category=${category}` : ""
-      }&_sort=${sortBy.type}&_order=${sortBy.order}`
+      `/pizzas?${category !== null ? `category=${category}` : ""}&_sort=${
+        sortBy.type
+      }&_order=${sortBy.order}`
     )
     .then(({ data }) => {
       dispatch(setPizzas(data));
+      dispatch(setLoaded(false));
     });
 };
 

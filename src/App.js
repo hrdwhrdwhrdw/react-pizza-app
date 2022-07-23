@@ -3,6 +3,7 @@ import { Header } from "./components";
 import { Cart, Home } from "./pages";
 import "./scss/app.scss";
 import { Routes, Route } from "react-router-dom";
+import NotFound from "./pages/NotFound/NotFound";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/cart" element={<Cart />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </div>
     </div>

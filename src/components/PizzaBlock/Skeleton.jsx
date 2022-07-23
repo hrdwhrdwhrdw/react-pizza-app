@@ -1,7 +1,7 @@
 import React from "react";
 import ContentLoader from "react-content-loader";
 
-const LoadingBlock = () => {
+const Skeleton = () => {
   return (
     <div className="pizza-block">
       <ContentLoader
@@ -23,4 +23,4 @@ const LoadingBlock = () => {
   );
 };
 
-export default LoadingBlock;
+export default Skeleton;

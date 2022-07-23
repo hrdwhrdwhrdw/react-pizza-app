@@ -28,4 +28,18 @@
       }
     }
   }
+
+  @media (max-width: 1260px) {
+    width: 100%;
+    overflow-X: scroll;
+    ul {
+    width: 785px;
+    padding: 5px 0;
+    }
+  }
+  @media (max-width: 768px) {
+    ul li{
+      padding: 8px 20px;
+    }
+  }
 }
