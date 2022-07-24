@@ -1,0 +1,40 @@
+.wrapper {
+  position: relative;
+  
+}
+
+.search {
+  padding: 8px 30px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  width: 300px;
+  border-radius: 6px;
+  font-size: 16px;
+  &:focus {
+    border: 2px solid rgba(0, 0, 0, 0.1);
+  }
+}
+
+.icon {
+  opacity: 0.3;
+  position: absolute;
+  margin-top: auto;
+  margin-bottom: auto;
+  top: 0;
+  bottom: 0;
+  left: 8px;
+  width: 20px;
+  height: 20px;
+}
+
+.closeIcon {
+  opacity: 0.3;
+  position: absolute;
+  margin-top: auto;
+  margin-bottom: auto;
+  top: 0;
+  bottom: 0;
+  right: 8px;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+}

@@ -4,10 +4,16 @@
   border-bottom: 1px solid $gray-line;
   padding: 40px 0;
 
+  &__search {
+    margin-left: 30px;
+    margin-right: auto;
+  }
+
   .container {
     display: flex;
     align-items: center;
     justify-content: space-between;
+
     @media (max-width: 1260px) {
       flex-direction: column;
 
