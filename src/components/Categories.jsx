@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 
 const Categories = memo(({ activeCategory, onClickCategory }) => {
   const categories = [
+    "Все",
     "Мясные",
     "Вегетарианская",
     "Гриль",
@@ -13,12 +14,6 @@ const Categories = memo(({ activeCategory, onClickCategory }) => {
   return (
     <div className="categories">
       <ul>
-        <li
-          className={activeCategory === null ? "active" : ""}
-          onClick={() => onClickCategory(null)}
-        >
-          Все
-        </li>
         {categories.map((item, index) => (
           <li
             className={index === activeCategory ? "active" : ""}

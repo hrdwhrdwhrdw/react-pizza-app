@@ -13,7 +13,7 @@ const fetchPizzas =
         `https://62dcc9254438813a261947b1.mockapi.io/items?page=${currentPage}&limit=4&sortBy=${
           sortBy.type
         }&order=${sortBy.order}${
-          category !== null ? `&category=${category}` : ""
+          category > 0 ? `&category=${category}` : ""
         }${searchValue ? `&search=${searchValue}` : ""}`
       )
       .then(({ data }) => {

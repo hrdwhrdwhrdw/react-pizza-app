@@ -11,5 +11,9 @@ const setCurrentPage = (currentPage) => ({
   type: "SET_CURRENT_PAGE",
   payload: currentPage,
 });
+const setFilters = ({ category, currentPage, sort, order }) => ({
+  type: "SET_FILTERS",
+  payload: { category, currentPage, sort, order },
+});
 
-export { setSortBy, setCategory, setCurrentPage };
+export { setSortBy, setCategory, setCurrentPage, setFilters };

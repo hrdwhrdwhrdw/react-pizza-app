@@ -18,3 +18,26 @@ const pizzas = (state = initialState, action) => {
 
 export default pizzas;
 
+// import { createSlice } from '@reduxjs/toolkit'
+
+// const initialState = {
+//   value: 0,
+// }
+
+// export const pizzaSlice = createSlice({
+//   name: 'pizzas',
+//   initialState,
+//   reducers: {
+//     setPizzas: (state, action) => {
+//       state.items = action.payload
+//     },
+//     setLoaded: (state, action) => {
+//       state.isLoading = action.payload
+//     },
+//   },
+// })
+
+// // Action creators are generated for each case reducer function
+// export const { setPizzas, setLoaded } = pizzaSlice.actions
+
+// export default pizzaSlice.reducer

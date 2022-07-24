@@ -9,3 +9,13 @@ const store = createStore(rootReducer, composeEnhancer(applyMiddleware(thunk)));
 export default store;
 
 
+// import { configureStore } from '@reduxjs/toolkit'
+// import pizzas from './reducers/pizzas/'
+// import filter from './reducers/filter/'
+// import cart from './reducers/cart/'
+
+// export const store = configureStore({
+//   pizzas,
+//   filter,
+//   cart,
+// })

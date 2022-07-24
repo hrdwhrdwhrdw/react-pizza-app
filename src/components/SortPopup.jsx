@@ -1,16 +1,17 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import PropTypes from "prop-types";
 
+export const sortItems = [
+  { name: "популярности (по убыванию)", type: "popular", order: "desc" },
+  { name: "популярности (по возрастанию)", type: "popular", order: "asc" },
+  { name: "цене (по убыванию)", type: "price", order: "desc" },
+  { name: "цене (по возрастанию)", type: "price", order: "asc" },
+  { name: "алфавиту (от Я до А)", type: "name", order: "desc" },
+  { name: "алфавиту (от А до Я)", type: "name", order: "asc" },
+];
+
 const SortPopup = memo(
   ({ activeSortType, onClickSelectSort, activeSortOrder }) => {
-    const sortItems = [
-      { name: "популярности (по убыванию)", type: "popular", order: "desc" },
-      { name: "популярности (по возрастанию)", type: "popular", order: "asc" },
-      { name: "цене (по убыванию)", type: "price", order: "desc" },
-      { name: "цене (по возрастанию)", type: "price", order: "asc" },
-      { name: "алфавиту (от Я до А)", type: "name", order: "desc" },
-      { name: "алфавиту (от А до Я)", type: "name", order: "asc" },
-    ];
     const [visiblePopup, setVisiblePopup] = useState(false);
     const activeLabel = sortItems.find(
       (obj) => activeSortType === obj.type && activeSortOrder === obj.order

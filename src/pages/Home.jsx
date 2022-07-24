@@ -1,13 +1,16 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Categories, SortPopup, PizzaBlock, Skeleton } from "../components";
-import { setCategory, setSortBy } from "../redux/actions/filters";
+import { setCategory, setSortBy, setFilters } from "../redux/actions/filters";
 import { fetchPizzas } from "../redux/actions/pizzas";
 import { addPizzaToCart } from "../redux/actions/cart";
 import Pagination from "../components/Pagination/Pagination";
-// import { useState } from "react";
 import { SearchContext } from "../App";
+import qs from "qs";
+import { useNavigate } from "react-router-dom";
+import { sortItems } from "../components/SortPopup";
+import { useRef } from "react";
 
 const Home = () => {
   const { searchValue } = useContext(SearchContext);
@@ -15,13 +18,42 @@ const Home = () => {
   const items = useSelector(({ pizzas }) => pizzas.items);
   const cartItems = useSelector(({ cart }) => cart.items);
   const isLoading = useSelector(({ pizzas }) => pizzas.isLoading);
-  const { category, sortBy, currentPage } = useSelector(({ filters }) => filters);
-  // const [currentPage, setCurrentPage] = useState(1);
+  const { category, sortBy, currentPage } = useSelector(
+    ({ filters }) => filters
+  );
+  const navigate = useNavigate();
+  const isSearch = useRef(false);
+  const [isMountedCount, setIsMountCount] = useState(0);
 
   useEffect(() => {
-    dispatch(fetchPizzas(category, sortBy, searchValue, currentPage));
-    window.scrollTo(0, 0);
+    if (window.location.search) {
+      const params = qs.parse(window.location.search.substring(1));
+      const sort = sortItems.find((obj) => obj.type === params.sort).type;
+      const order = sortItems.find((obj) => obj.order === params.order).order;
+      dispatch(setFilters({ ...params, sort, order }));
+      isSearch.current = true;
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!isSearch.current) {
+      dispatch(fetchPizzas(category, sortBy, searchValue, currentPage));
+    }
+    isSearch.current = false;
   }, [category, sortBy, searchValue, currentPage]);
+
+  useEffect(() => {
+    if (isMountedCount > 0) {
+      const queryString = qs.stringify({
+        category,
+        currentPage,
+        sort: sortBy.type,
+        order: sortBy.order,
+      });
+      navigate(`?${queryString}`);
+    }
+    setIsMountCount(isMountedCount + 1);
+  }, [category, sortBy, currentPage]);
 
   const onSelectCategory = useCallback((catIndex) => {
     dispatch(setCategory(catIndex));
