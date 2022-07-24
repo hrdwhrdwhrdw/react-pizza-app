@@ -6,19 +6,8 @@ import { setCategory, setSortBy } from "../redux/actions/filters";
 import { fetchPizzas } from "../redux/actions/pizzas";
 import { addPizzaToCart } from "../redux/actions/cart";
 import Pagination from "../components/Pagination/Pagination";
-import { useState } from "react";
+// import { useState } from "react";
 import { SearchContext } from "../App";
-
-const categories = ["Мясные", "Вегетарианская", "Гриль", "Острые", "Закрытые"];
-
-const sortItems = [
-  { name: "популярности (по убыванию)", type: "popular", order: "desc" },
-  { name: "популярности (по возрастанию)", type: "popular", order: "asc" },
-  { name: "цене (по убыванию)", type: "price", order: "desc" },
-  { name: "цене (по возрастанию)", type: "price", order: "asc" },
-  { name: "алфавиту (от Я до А)", type: "name", order: "desc" },
-  { name: "алфавиту (от А до Я)", type: "name", order: "asc" },
-];
 
 const Home = () => {
   const { searchValue } = useContext(SearchContext);
@@ -26,8 +15,8 @@ const Home = () => {
   const items = useSelector(({ pizzas }) => pizzas.items);
   const cartItems = useSelector(({ cart }) => cart.items);
   const isLoading = useSelector(({ pizzas }) => pizzas.isLoading);
-  const { category, sortBy } = useSelector(({ filters }) => filters);
-  const [currentPage, setCurrentPage] = useState(1);
+  const { category, sortBy, currentPage } = useSelector(({ filters }) => filters);
+  // const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     dispatch(fetchPizzas(category, sortBy, searchValue, currentPage));
@@ -51,13 +40,11 @@ const Home = () => {
       <div className="content__top">
         <Categories
           onClickCategory={(catIndex) => onSelectCategory(catIndex)}
-          items={categories}
           activeCategory={category}
         />
         <SortPopup
           activeSortType={sortBy.type}
           activeSortOrder={sortBy.order}
-          items={sortItems}
           onClickSelectSort={(sortType) => onSelectSort(sortType)}
         />
       </div>
@@ -76,7 +63,7 @@ const Home = () => {
               />
             ))}
       </div>
-      <Pagination setCurrentPage={setCurrentPage} />
+      <Pagination />
     </div>
   );
 };

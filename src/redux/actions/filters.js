@@ -7,5 +7,9 @@ const setCategory = (catIndex) => ({
   type: "SET_CATEGORY",
   payload: catIndex,
 });
+const setCurrentPage = (currentPage) => ({
+  type: "SET_CURRENT_PAGE",
+  payload: currentPage,
+});
 
-export { setSortBy, setCategory };
+export { setSortBy, setCategory, setCurrentPage };
