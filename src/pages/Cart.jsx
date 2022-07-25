@@ -1,37 +1,20 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { CartItem } from "../components";
-import { clearCart, minusItem, plusItem, removeCartItem } from "../redux/actions/cart";
-import emptyCartImage from "../assets/img/empty-cart.png";
 import { Link } from "react-router-dom";
+import { clearItems } from "../redux/reducers/cartSlice";
+import EmptyCart from "../components/EmptyCart";
 
 const Cart = () => {
   const dispatch = useDispatch();
-  const { totalPrice, totalCount, items } = useSelector(({ cart }) => cart);
 
-  const cartPizzas = Object.keys(items).map((key) => {
-    return items[key].items[0];
-  });
+  const {  items, totalPrice, totalCount } = useSelector((state) => state.cart);
 
   const onClearCart = () => {
     if (window.confirm("Вы действительно хотите очистить корзину?")) {
-      dispatch(clearCart());
+      dispatch(clearItems());
     }
   };
-
-  const onRemoveItem = (id) => {
-    if (window.confirm("Вы действительно хотите очистить?")) {
-      dispatch(removeCartItem(id));
-    }
-  };
-
-  const onPlusItem = (id) => {
-    dispatch(plusItem(id))
-  }
-
-  const onMinusItem = (id) => {
-    dispatch(minusItem(id))
-  }
 
   return (
     <div className="content">
@@ -112,30 +95,23 @@ const Cart = () => {
               </div>
             </div>
             <div className="content__items">
-              {cartPizzas.map((obj) => (
+              {items.map((obj) => (
                 <CartItem
+                  key={obj.id}
                   id={obj.id}
                   name={obj.name}
                   type={obj.type}
                   size={obj.size}
-                  totalPrice={items[obj.id].totalPrice}
-                  totalCount={items[obj.id].items.length}
-                  onRemove={onRemoveItem}
-                  onPlus={onPlusItem}
-                  onMinus={onMinusItem}
+                  imageUrl={obj.imageUrl}
+                  totalCount={obj.count}
+                  totalPrice={obj.price * obj.count}
                 />
               ))}
             </div>
             <div className="cart__bottom">
               <div className="cart__bottom-details">
-                <span>
-                  {" "}
-                  Всего пицц: <b>{totalCount} шт.</b>{" "}
-                </span>
-                <span>
-                  {" "}
-                  Сумма заказа: <b>{totalPrice} ₽</b>{" "}
-                </span>
+                <span> Всего пицц: <b>{totalCount} шт.</b>{" "}</span>
+                <span> Сумма заказа: <b>{totalPrice} ₽</b>{" "}</span>
               </div>
               <div className="cart__bottom-buttons">
                 <Link
@@ -166,20 +142,7 @@ const Cart = () => {
             </div>
           </div>
         ) : (
-          <div className="cart cart--empty">
-            <h2>
-              Корзина пустая <icon>😕</icon>
-            </h2>
-            <p>
-              Вероятней всего, вы не заказывали ещё пиццу.
-              <br />
-              Для того, чтобы заказать пиццу, перейди на главную страницу.
-            </p>
-            <img src={emptyCartImage} alt="" />
-            <Link to="/" className="button button--black">
-              <span>Вернуться назад</span>
-            </Link>
-          </div>
+          <EmptyCart />
         )}
       </div>
     </div>

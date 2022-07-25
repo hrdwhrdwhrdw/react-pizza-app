@@ -2,9 +2,8 @@ import React, { useContext, useEffect, useState } from "react";
 import { useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Categories, SortPopup, PizzaBlock, Skeleton } from "../components";
-import { setCategory, setSortBy, setFilters } from "../redux/reducers/filters";
-import { fetchPizzas, setLoaded, setPizzas } from "../redux/reducers/pizzas";
-import { addPizzaToCart } from "../redux/actions/cart";
+import { setCategory, setSortBy, setFilters } from "../redux/reducers/filterSlice";
+import { setLoaded, setPizzas } from "../redux/reducers/pizzasSlice";
 import Pagination from "../components/Pagination/Pagination";
 import { SearchContext } from "../App";
 import qs from "qs";
@@ -18,14 +17,11 @@ const Home = () => {
   const dispatch = useDispatch();
   const items = useSelector((state) => state.pizzas.items);
   
-  // const cartItems = useSelector(({ cart }) => cart.items);
   const isLoading = useSelector((state) => state.pizzas.isLoading);
   const { category, sortBy, currentPage } = useSelector(
     (state) => state.filter
   );
-  // const { category, sortBy, currentPage } = useSelector(
-  //   ({ filters }) => filters
-  // );
+
   const navigate = useNavigate();
   const isSearch = useRef(false);
   const [isMountedCount, setIsMountCount] = useState(0);
@@ -87,10 +83,6 @@ const Home = () => {
     dispatch(setSortBy(sortType));
   }, []);
 
-  const handleAddPizzaToCart = (obj) => {
-    dispatch(addPizzaToCart(obj));
-  };
-
   return (
     <div className="container">
       <div className="content__top">
@@ -99,9 +91,7 @@ const Home = () => {
           activeCategory={category}
         />
         <SortPopup
-          activeSortType={sortBy.type}
-          activeSortOrder={sortBy.order}
-          onClickSelectSort={(sortType) => onSelectSort(sortType)}
+          onClickSelectSort={onSelectSort}
         />
       </div>
       <h2 className="content__title">Все пиццы</h2>
@@ -110,7 +100,6 @@ const Home = () => {
           ? [...new Array(10)].map((_, index) => <Skeleton key={index} />)
           : items.map((item) => (
               <PizzaBlock
-                onClickAddPizza={handleAddPizzaToCart}
                 key={item.id}
                 // cartItemCount={
                 //   cartItems[item.id] && cartItems[item.id].items.length

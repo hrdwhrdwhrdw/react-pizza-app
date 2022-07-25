@@ -1,4 +1,10 @@
 import React from "react";
+import { useDispatch } from "react-redux";
+import {
+  addItem,
+  removeGroupItems,
+  removeItem,
+} from "../redux/reducers/cartSlice";
 import Button from "./Button";
 
 const CartItem = ({
@@ -6,30 +12,28 @@ const CartItem = ({
   name,
   type,
   size,
+  imageUrl,
   totalPrice,
   totalCount,
-  onRemove,
-  onMinus,
-  onPlus,
 }) => {
-  const handleRemoveClick = () => {
-    onRemove(id);
+  const dispatch = useDispatch();
+
+  const onClickPlus = () => {
+    dispatch(addItem({ id }));
+  };
+  const onClickMinus = () => {
+    dispatch(removeItem({ id }));
+  };
+  const onClickMinusGroup = () => {
+    if (window.confirm("Вы действительно хотите очистить?")) {
+      dispatch(removeGroupItems({ id }));
+    }
   };
 
-  const handlePlusItem = () => {
-    onPlus(id);
-  };
-  const handleMinusItem = () => {
-    onMinus(id);
-  };
   return (
     <div className="cart__item">
       <div className="cart__item-img">
-        <img
-          className="pizza-block__image"
-          src="https://dodopizza-a.akamaihd.net/static/Img/Products/Pizza/ru-RU/b750f576-4a83-48e6-a283-5a8efb68c35d.jpg"
-          alt="Pizza"
-        />
+        <img className="pizza-block__image" src={imageUrl} alt="Pizza" />
       </div>
       <div className="cart__item-info">
         <h3>{name}</h3>
@@ -39,7 +43,7 @@ const CartItem = ({
       </div>
       <div className="cart__item-count">
         <Button
-          onClick={handleMinusItem}
+          onClick={onClickMinus}
           className="button--circle cart__item-count-minus"
           outline
         >
@@ -62,7 +66,7 @@ const CartItem = ({
         </Button>
         <b>{totalCount}</b>
         <Button
-          onClick={handlePlusItem}
+          onClick={onClickPlus}
           className="button--circle cart__item-count-plus"
           outline
         >
@@ -88,7 +92,7 @@ const CartItem = ({
         <b>{totalPrice} ₽</b>
       </div>
       <div className="cart__item-remove">
-        <Button className="button--circle" onClick={handleRemoveClick} outline>
+        <Button className="button--circle" onClick={onClickMinusGroup} outline>
           <svg
             width="10"
             height="10"
