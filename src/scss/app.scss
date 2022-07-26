@@ -51,7 +51,11 @@ body {
     }
   }
 
-
+  &__error-page {
+    text-align: center;
+    margin: 200px auto;
+    width: 580px;
+  }
 
   &__top {
     display: flex;

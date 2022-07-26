@@ -19,14 +19,14 @@ const CartItem = ({
   const dispatch = useDispatch();
 
   const onClickPlus = () => {
-    dispatch(addItem({ id }));
+    dispatch(addItem({ id, type, size }));
   };
   const onClickMinus = () => {
     dispatch(removeItem({ id }));
   };
   const onClickMinusGroup = () => {
     if (window.confirm("Вы действительно хотите очистить?")) {
-      dispatch(removeGroupItems({ id }));
+      dispatch(removeGroupItems({ id, type, size }));
     }
   };
 
