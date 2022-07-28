@@ -1,41 +1,72 @@
 import React, { memo, useEffect, useRef, useState } from "react";
-import PropTypes from "prop-types";
 import { useSelector } from "react-redux";
+import {
+  OrderType,
+  SortByType,
+  SortNameType,
+  SortType,
+} from "../redux/reducers/filterSlice";
+import { RootState } from "../redux/store";
 
-export const sortItems = [
-  { name: "популярности (по убыванию)", type: "popular", order: "desc" },
-  { name: "популярности (по возрастанию)", type: "popular", order: "asc" },
-  { name: "цене (по убыванию)", type: "price", order: "desc" },
-  { name: "цене (по возрастанию)", type: "price", order: "asc" },
-  { name: "алфавиту (от Я до А)", type: "name", order: "desc" },
-  { name: "алфавиту (от А до Я)", type: "name", order: "asc" },
+export const sortItems: SortByType[] = [
+  {
+    name: SortNameType.POPULAR_DESC,
+    type: SortType.POPULAR,
+    order: OrderType.DESC,
+  },
+  {
+    name: SortNameType.POPULAR_ASC,
+    type: SortType.POPULAR,
+    order: OrderType.ASC,
+  },
+  {
+    name: SortNameType.PRICE_DESC,
+    type: SortType.PRICE,
+    order: OrderType.DESC,
+  },
+  { name: SortNameType.PRICE_ASC, 
+    type: SortType.PRICE, 
+    order: OrderType.ASC },
+  {
+    name: SortNameType.ALPHABET_DESC,
+    type: SortType.NAME,
+    order: OrderType.DESC,
+  },
+  {
+    name: SortNameType.ALPHABET_ASC,
+    type: SortType.NAME,
+    order: OrderType.ASC,
+  },
 ];
 
-const SortPopup = memo(({ onClickSelectSort }) => {
+export type SortPropsType = {
+  onClickSelectSort: (sortType: SortByType) => void;
+};
+
+const SortPopup: React.FC<SortPropsType> = memo((props) => {
   const [visiblePopup, setVisiblePopup] = useState(false);
-  const { sortBy } = useSelector((state) => state.filter);
+  const { sortBy } = useSelector((state: RootState) => state.filter);
 
   const activeLabel = sortItems.find(
     (obj) => sortBy.type === obj.type && sortBy.order === obj.order
-  ).name;
+  )?.name;
 
   const toggleVisiblePopup = () => {
     setVisiblePopup(!visiblePopup);
   };
 
-  const onSelectItem = (sortType) => {
-    if (onClickSelectSort) {
-      onClickSelectSort(sortType);
+  const onSelectItem = (sortType: SortByType) => {
+    if (props.onClickSelectSort) {
+      props.onClickSelectSort(sortType);
     }
     setVisiblePopup(false);
   };
 
-  const sortRef = useRef();
+  const sortRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const handleOutSideClick = (e) => {
-      const path = e.path || (e.composedPath && e.composedPath());
-      if (!path.includes(sortRef.current)) {
+    const handleOutSideClick = (event: MouseEvent) => {
+      if (sortRef.current && !event.composedPath().includes(sortRef.current)) {
         setVisiblePopup(false);
       }
     };
@@ -84,9 +115,5 @@ const SortPopup = memo(({ onClickSelectSort }) => {
     </div>
   );
 });
-
-SortPopup.propTypes = {
-  onClickSelectSort: PropTypes.func.isRequired,
-};
 
 export default SortPopup;

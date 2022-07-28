@@ -1,37 +1,51 @@
 import classNames from "classnames";
 import React, { useState } from "react";
-import PropTypes from "prop-types";
-import Button from "../Button";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem } from "../../redux/reducers/cartSlice";
+import { addItem, CartItemType } from "../../redux/reducers/cartSlice";
+import { RootState } from "../../redux/store";
 
-const PizzaBlock = ({ id, name, price, imageUrl, types }) => {
+type PizzaBlockTypes = {
+  id: number;
+  name: string;
+  imageUrl: string;
+  price: number;
+  types: number[];
+};
+
+const PizzaBlock: React.FC<PizzaBlockTypes> = ({
+  id,
+  name,
+  price,
+  imageUrl,
+  types,
+}) => {
   const typeNames = ["тонкое", "традиционное"];
-  const sizes = ["26", "30", "40"];
-  const cartItem = useSelector((state) =>
+  const sizes = [26, 30, 40];
+  const cartItem = useSelector<RootState>((state) =>
     state.cart.items.find((obj) => obj.id === id)
-  );
+  ) as unknown as CartItemType;
   const cartCount = cartItem ? cartItem.count : 0;
-  const [activeType, setActiveType] = useState(0);
-  const [activeSize, setActiveSize] = useState(0);
+  const [activeType, setActiveType] = useState<number>(0);
+  const [activeSize, setActiveSize] = useState<number>(0);
   const dispatch = useDispatch();
 
-  const onSelectType = (index) => {
+  const onSelectType = (index: number) => {
     setActiveType(index);
   };
 
-  const onSelectSize = (index) => {
+  const onSelectSize = (index: number) => {
     setActiveSize(index);
   };
 
   const onClickAdd = () => {
-    const item = {
+    const item: CartItemType = {
       id,
       name,
       imageUrl,
       price,
       size: sizes[activeSize],
       type: typeNames[activeType],
+      count: 0,
     };
     dispatch(addItem(item));
   };
@@ -43,7 +57,7 @@ const PizzaBlock = ({ id, name, price, imageUrl, types }) => {
         <h4 className="pizza-block__title">{name}</h4>
         <div className="pizza-block__selector">
           <ul>
-            {typeNames.map((type, index) => (
+            {typeNames.map((type: string, index: number) => (
               <li
                 key={type}
                 onClick={() => onSelectType(index)}
@@ -57,7 +71,7 @@ const PizzaBlock = ({ id, name, price, imageUrl, types }) => {
             ))}
           </ul>
           <ul>
-            {sizes.map((size, index) => (
+            {sizes.map((size: number, index: number) => (
               <li
                 key={size}
                 onClick={() => onSelectSize(index)}
@@ -73,7 +87,10 @@ const PizzaBlock = ({ id, name, price, imageUrl, types }) => {
         </div>
         <div className="pizza-block__bottom">
           <div className="pizza-block__price">от {price}₽</div>
-          <Button onClick={onClickAdd} className="button--add" outline>
+          <button
+            onClick={onClickAdd}
+            className="button button--outline button--add"
+          >
             <svg
               width="12"
               height="12"
@@ -88,24 +105,11 @@ const PizzaBlock = ({ id, name, price, imageUrl, types }) => {
             </svg>
             <span>Добавить</span>
             {cartCount > 0 && <i>{cartCount}</i>}
-          </Button>
+          </button>
         </div>
       </div>
     </div>
   );
-};
-
-PizzaBlock.propTypes = {
-  name: PropTypes.string.isRequired,
-  imageUrl: PropTypes.string.isRequired,
-  price: PropTypes.number.isRequired,
-  types: PropTypes.arrayOf(PropTypes.number).isRequired,
-  sizes: PropTypes.arrayOf(PropTypes.number).isRequired,
-  category: PropTypes.number.isRequired,
-  rating: PropTypes.number.isRequired,
-  isLoading: PropTypes.bool,
-  onAddPizza: PropTypes.func,
-  cartItemCount: PropTypes.number,
 };
 
 export default PizzaBlock;
