@@ -1,18 +1,12 @@
-import classNames from "classnames";
 import React, { useState } from "react";
+import classNames from "classnames";
 import { useDispatch, useSelector } from "react-redux";
-import { addItem, CartItemType } from "../../redux/reducers/cartSlice";
+import { addItem } from "../../redux/cart/cartSlice";
 import { RootState } from "../../redux/store";
+import { CartItemType } from '../../redux/cart/types';
+import { PizzaBlockType } from '../../redux/pizza/types';
 
-type PizzaBlockTypes = {
-  id: number;
-  name: string;
-  imageUrl: string;
-  price: number;
-  types: number[];
-};
-
-const PizzaBlock: React.FC<PizzaBlockTypes> = ({
+const PizzaBlock: React.FC<PizzaBlockType> = ({
   id,
   name,
   price,

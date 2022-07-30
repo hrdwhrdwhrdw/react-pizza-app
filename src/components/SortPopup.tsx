@@ -1,12 +1,8 @@
 import React, { memo, useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
-import {
-  OrderType,
-  SortByType,
-  SortNameType,
-  SortType,
-} from "../redux/reducers/filterSlice";
-import { RootState } from "../redux/store";
+import { useCallback } from "react";
+import { SortNameType, SortType, OrderType, SortByType } from '../redux/filter/types';
+import { setSortBy } from "../redux/filter/filterSlice";
+import { useAppDispatch } from '../hooks/useAppDispatch';
 
 export const sortItems: SortByType[] = [
   {
@@ -24,9 +20,7 @@ export const sortItems: SortByType[] = [
     type: SortType.PRICE,
     order: OrderType.DESC,
   },
-  { name: SortNameType.PRICE_ASC, 
-    type: SortType.PRICE, 
-    order: OrderType.ASC },
+  { name: SortNameType.PRICE_ASC, type: SortType.PRICE, order: OrderType.ASC },
   {
     name: SortNameType.ALPHABET_DESC,
     type: SortType.NAME,
@@ -39,13 +33,14 @@ export const sortItems: SortByType[] = [
   },
 ];
 
-export type SortPropsType = {
-  onClickSelectSort: (sortType: SortByType) => void;
+type SortPopupType = {
+  sortBy: SortByType;
 };
 
-const SortPopup: React.FC<SortPropsType> = memo((props) => {
+const SortPopup: React.FC<SortPopupType> = memo(({ sortBy }) => {
   const [visiblePopup, setVisiblePopup] = useState(false);
-  const { sortBy } = useSelector((state: RootState) => state.filter);
+
+  const dispatch = useAppDispatch();
 
   const activeLabel = sortItems.find(
     (obj) => sortBy.type === obj.type && sortBy.order === obj.order
@@ -55,12 +50,11 @@ const SortPopup: React.FC<SortPropsType> = memo((props) => {
     setVisiblePopup(!visiblePopup);
   };
 
-  const onSelectItem = (sortType: SortByType) => {
-    if (props.onClickSelectSort) {
-      props.onClickSelectSort(sortType);
-    }
+  const onSelectItem = useCallback((sortType: SortByType) => {
+    dispatch(setSortBy(sortType));
     setVisiblePopup(false);
-  };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const sortRef = useRef<HTMLDivElement>(null);
 
@@ -72,7 +66,7 @@ const SortPopup: React.FC<SortPropsType> = memo((props) => {
     };
     document.body.addEventListener("click", handleOutSideClick);
     return () => document.body.removeEventListener("click", handleOutSideClick);
-  });
+  },[]);
 
   return (
     <div ref={sortRef} className="sort">

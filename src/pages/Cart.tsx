@@ -1,9 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { CartItem } from "../components";
+import { CartItem, EmptyCart } from "../components";
 import { Link } from "react-router-dom";
-import { clearItems, CartItemType } from "../redux/reducers/cartSlice";
-import EmptyCart from "../components/EmptyCart";
+import { clearItems } from "../redux/cart/cartSlice";
 import { RootState } from "../redux/store";
 
 const Cart: React.FC = () => {
@@ -98,7 +97,7 @@ const Cart: React.FC = () => {
               </div>
             </div>
             <div className="content__items">
-              {items.map((obj: CartItemType) => (
+              {items.map((obj) => (
                 <CartItem
                   key={obj.id}
                   id={obj.id}
@@ -144,9 +143,9 @@ const Cart: React.FC = () => {
                   </svg>
                   <span>Вернуться назад</span>
                 </Link>
-                <div className="button pay-btn">
+                <button className="button pay-btn">
                   <span>Оплатить сейчас</span>
-                </div>
+                </button>
               </div>
             </div>
           </div>

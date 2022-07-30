@@ -1,19 +1,17 @@
 import React, { useEffect, useState, useCallback, useRef } from "react";
 import { useSelector } from "react-redux";
-import { Categories, SortPopup, PizzaBlock, Skeleton } from "../components";
+import { Categories, SortPopup, PizzaBlock, Skeleton, Pagination } from "../components";
 import {
   setCategory,
-  setSortBy,
   setFilters,
   setCurrentPage,
-} from "../redux/reducers/filterSlice";
-import { fetchPizzasThunk, PizzaItem } from "../redux/reducers/pizzasSlice";
-import Pagination from "../components/Pagination/Pagination";
+} from "../redux/filter/filterSlice";
 import qs from "qs";
 import { useNavigate } from "react-router-dom";
 import { sortItems } from "../components/SortPopup";
-import { RootState, useAppDispatch } from "../redux/store";
-import { SortByType } from "../redux/reducers/filterSlice";
+import { RootState } from "../redux/store";
+import { fetchPizzasThunk } from '../redux/asyncThunk';
+import { useAppDispatch } from '../hooks/useAppDispatch';
 
 const Home: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -33,6 +31,8 @@ const Home: React.FC = () => {
       const type = sortItems.find((obj) => obj.type === params.sort)?.type;
       const order = sortItems.find((obj) => obj.order === params.order)?.order;
       if (order && type) {
+        let category = Number(params.category);
+        let currentPage = Number(params.currentPage);
         dispatch(
           setFilters({ currentPage, category, sortBy: { type, order } })
         );
@@ -40,7 +40,6 @@ const Home: React.FC = () => {
           fetchPizzasThunk({ currentPage, sortBy, category, searchValue })
         );
       }
-
       isSearch.current = true;
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -75,14 +74,10 @@ const Home: React.FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onSelectSort = useCallback((sortType: SortByType) => {
-    dispatch(setSortBy(sortType));
+  const handleCurrentPage = useCallback((currentPage: number) => {
+    dispatch(setCurrentPage(currentPage));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-
-  const handleCurrentPage = (currentPage: number) => {
-    dispatch(setCurrentPage(currentPage));
-  };
 
   return (
     <div className="container">
@@ -91,7 +86,7 @@ const Home: React.FC = () => {
           onClickCategory={onSelectCategory}
           activeCategory={category}
         />
-        <SortPopup onClickSelectSort={onSelectSort} />
+        <SortPopup sortBy={sortBy} />
       </div>
       <h2 className="content__title">Все пиццы</h2>
       {status === "error" ? (
@@ -103,11 +98,11 @@ const Home: React.FC = () => {
       <div className="content__items">
         {status === "loading"
           ? [...new Array(10)].map((_, index) => <Skeleton key={index} />)
-          : items.map((item: PizzaItem) => (
+          : items.map((item) => (
               <PizzaBlock key={item.id} {...item} />
             ))}
       </div>
-      <Pagination onPageChanged={handleCurrentPage} />
+      <Pagination onPageChanged={handleCurrentPage} currentPage={currentPage}/>
     </div>
   );
 };
